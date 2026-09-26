@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie Finder</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link rel="shortcut icon" href="https://yt3.googleusercontent.com/v9COMuQA-lnNR2j16Ufm8Sx82NgvXCiFU-AE-DYkd51wqRYuG0HLVhBvuDTsCaAs-iSL7lON=s900-c-k-c0x00ffffff-no-rj" type="image/x-icon">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, #25213d 0, transparent 35%),
+                radial-gradient(circle at bottom right, #172b3d 0, transparent 35%),
+                #090b10;
+            color: #fff;
+        }
+
+        /* Header */
+
+        .page-header {
+            text-align: center;
+            padding: 55px 20px 30px;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .page-header h1 span {
+            color: #f5c518;
+        }
+
+        .page-header p {
+            color: #969ba7;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        /* Search */
+
+        .search-wrapper {
+            max-width: 720px;
+            margin: 10px auto 45px;
+            padding: 0 15px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            backdrop-filter: blur(12px);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+            padding: 13px 15px;
+            font-size: 16px;
+        }
+
+        .search-box input::placeholder {
+            color: #777d89;
+        }
+
+        .search-btn {
+            border: none;
+            background: #f5c518;
+            color: #111;
+            padding: 0 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        .search-btn:hover {
+            background: #ffd83d;
+            transform: translateY(-1px);
+        }
+
+        /* Movie Card */
+
+        .movie-card {
+            max-width: 1050px;
+            margin: auto;
+            background: rgba(18, 21, 28, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+        }
+
+        .movie-content {
+            padding: 35px;
+        }
+
+        /* Poster */
+
+        .poster-wrapper {
+            height: 450px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #171a21;
+        }
+
+        .poster-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Movie Info */
+
+        .movie-title {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .movie-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            align-items: center;
+            color: #9da2ad;
+            margin-bottom: 22px;
+        }
+
+        .meta-badge {
+            padding: 5px 10px;
+            border: 1px solid #343944;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .rating-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            background: rgba(245, 197, 24, 0.1);
+            border: 1px solid rgba(245, 197, 24, 0.25);
+            border-radius: 10px;
+            margin-bottom: 22px;
+        }
+
+        .rating-box i {
+            color: #f5c518;
+        }
+
+        .rating-number {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .rating-label {
+            color: #8f949e;
+            font-size: 13px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #777e8c;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .plot {
+            color: #c3c7cf;
+            line-height: 1.7;
+            font-size: 15px;
+            margin-bottom: 28px;
+        }
+
+        /* Details */
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .detail-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.035);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .detail-label {
+            display: block;
+            color: #747b88;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #e6e8ec;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Genres */
+
+        .genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .genre {
+            background: #242832;
+            color: #d9dce2;
+            border-radius: 20px;
+            padding: 7px 13px;
+            font-size: 12px;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            color: #626875;
+            font-size: 12px;
+            padding: 35px 0;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 768px) {
+
+            .page-header {
+                padding-top: 35px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                padding: 12px;
+            }
+
+            .movie-content {
+                padding: 20px;
+            }
+
+            .poster-wrapper {
+                height: 400px;
+                margin-bottom: 25px;
+            }
+
+            .movie-title {
+                font-size: 30px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+
+    <header class="page-header">
+        <h1>Movie<span>Finder</span></h1>
+        <p>Search for a movie and explore its details</p>
+    </header>
+
+
+    <!-- Search -->
+
+    <div class="search-wrapper">
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="movieInput"
+                placeholder="Enter movie name..."
+            >
+
+            <button
+                onclick="fetchApi()"
+                class="search-btn"
+                id="searchBtn"
+            >
+                <i class="bi bi-search"></i>
+                Search
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Movie Details -->
+
+    <div id="result">
+
+    </div>
+
+
+    <footer class="footer">
+        MovieFinder • Movie information powered by API
+    </footer>
+
+
+    <!-- Your JavaScript goes here -->
+    <script>
+
+       const fetchApi = async()=>{
+        let inputVal=document.getElementById("movieInput").value
+        console.log(inputVal)
+
+        let apiResponse = await fetch(`http://www.omdbapi.com/?t=${inputVal}&apikey=d70e31e9`)
+
+        if(apiResponse.status==404)
+            {
+                alert("Invalid Movie Name")
+            }
+            let apiData = await apiResponse.json()
+            console.log(apiData)
+
+            let resultEl = document.getElementById("result")
+
+            resultEl.innerHTML =`<main class="container pb-4">
+
+        <div class="movie-card">
+
+            <div class="movie-content">
+
+                <div class="row g-4">
+
+                    <!-- Poster -->
+
+                    <div class="col-lg-4 col-md-5">
+
+                        <div class="poster-wrapper">
+
+                            <img
+                                id="moviePoster"
+                                src="${apiData?.Poster}"
+                                alt="Movie Poster"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Information -->
+
+                    <div class="col-lg-8 col-md-7">
+
+                        <h2
+                            class="movie-title"
+                            id="movieTitle"
+                        >
+                            ${apiData?.Title}
+                        </h2>
+
+                        <div class="movie-meta">
+
+                            <span id="movieYear">
+                                ${apiData?.Year}
+                            </span>
+
+                            <span>•</span>
+
+                            <span
+                                class="meta-badge"
+                                id="movieRated"
+                            >
+                                ${apiData?.imdbRating}
+                            </span>
+
+                            <span>•</span>
+
+                            <span id="movieRuntime">
+                                ${apiData?.Runtime}
+                            </span>
+
+                        </div>
+
+
+                        <!-- Rating -->
+
+                        <div class="rating-box">
+
+                            <i class="bi bi-star-fill"></i>
+
+                            <span
+                                class="rating-number"
+                                id="movieRating"
+                            >
+                                ${apiData?.imdbRating}
+                            </span>
+
+                            <span class="rating-label">
+                                / 10
+                            </span>
+
+                        </div>
+
+
+                        <!-- Plot -->
+
+                        <div class="section-title">
+                            Overview
+                        </div>
+
+                        <p
+                            class="plot"
+                            id="moviePlot"
+                        >
+                            ${apiData?.Plot}
+                        </p>
+
+
+                        <!-- Details -->
+
+                        <div class="details-grid">
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Director
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="movieDirector"
+                                >
+                                    ${apiData?.Director}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Cast
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="movieActors"
+                                >
+                                    ${apiData?.Actors}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Language
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="movieLanguage"
+                                >
+                                    ${apiData?.Language}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Country
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="movieCountry"
+                                >
+                                    ${apiData?.Country}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Released
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="movieReleased"
+                                >
+                                    ${apiData?.Released}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Awards
+                                </span>
+
+                                <span
+                                    class="detail-value"
+                                    id="movieAwards"
+                                >
+                                    ${apiData?.Awards}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Genres -->
+
+                        <div class="genres" id="movieGenres">
+
+                            <span class="genre">
+                                ${apiData?.Genre}
+                            </span>
+
+                            
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>`
+        }
+    </script>
+
+</body>
+</html>
+
