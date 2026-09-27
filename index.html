@@ -352,7 +352,7 @@
         let inputVal=document.getElementById("movieInput").value
         console.log(inputVal)
 
-        let apiResponse = await fetch(`http://www.omdbapi.com/?t=${inputVal}&apikey=d70e31e9`)
+        let apiResponse = await fetch(`https://www.omdbapi.com/?t=${inputVal}&apikey=d70e31e9`)
 
         if(apiResponse.status==404)
             {
